@@ -38,11 +38,11 @@ async def players_generator():
         await sleep(0.02)
 
 
-@app.get("/players")
+@app.get("/players.json")
 async def root():
     return StreamingResponse(players_generator(), media_type="text/event-stream")
 
-@app.put("/players/{player_id}")
+@app.put("/players/{player_id}.json")
 async def update_player(player_id: int, player: Player):
     players[player_id] = {
         "id": player_id,
@@ -53,7 +53,7 @@ async def update_player(player_id: int, player: Player):
     return Response(status_code=200)
 
 
-@app.delete("/players/{player_id}")
+@app.delete("/players/{player_id}.json")
 async def delete_player(player_id: int):
     players.pop(player_id)
     return Response(status_code=200)
