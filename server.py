@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Response
-from fastapi.responses import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-import json, uvicorn
+import json
+
 from asyncio import sleep
 from pydantic import BaseModel
+
+import uvicorn
+from fastapi import FastAPI, Response
+from fastapi.responses import StreamingResponse
 
 
 class Player(BaseModel):
@@ -17,11 +19,10 @@ app = FastAPI()
 
 players = {}
 
+
 def wrap_players_in_firebase_json():
-    return json.dumps({
-        "path": "/",
-        "data": players
-    })
+    return json.dumps({"path": "/", "data": players})
+
 
 async def players_generator():
     while True:
@@ -33,6 +34,7 @@ async def players_generator():
 @app.get("/players.json")
 async def root():
     return StreamingResponse(players_generator(), media_type="text/event-stream")
+
 
 @app.put("/players/{player_id}.json")
 async def update_player(player_id: int, player: Player):
