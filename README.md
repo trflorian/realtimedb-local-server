@@ -8,3 +8,6 @@ A tiny web server with three endpoints:
 
 The last endpoint implements the server-sent event protocl, similar to how the Firebase Realtime DB sends data to clients when something changes.
 Currently, all the players are just sent at a regular interval regardless of whether their data has changed.
+
+This project is part of the multiplayer firebase project:
+- https://github.com/trflorian/multiplayer-firebase
