@@ -8,14 +8,14 @@ class PlayerManager:
         """
         self._players: dict[int, Player] = {}
 
-    def get_players_dict(self) -> dict[int, Player]:
+    def get_players(self) -> list[Player]:
         """
         Returns the dictionary of players.
 
         Returns:
-            dict[int, Player]: The dictionary of players.
+            list[Player]: A list of Player objects.
         """
-        return self._players
+        return list(self._players.values())
 
     def add_or_update_player(self, player: Player) -> None:
         """

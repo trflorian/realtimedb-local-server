@@ -1,4 +1,3 @@
-import json
 from asyncio import sleep
 from typing import AsyncGenerator
 
@@ -8,11 +7,12 @@ from fastapi.responses import StreamingResponse
 from ..dependencies import PlayerManagerDep
 from ..game.manager import PlayerManager
 from ..game.models import Player
+from ..sse.events import players_to_event
 
 router = APIRouter()
 
 
-async def players_generator(player_manager: PlayerManager) -> AsyncGenerator[str]:
+async def players_generator(player_manager: PlayerManager, player_loop_fps: int = 10) -> AsyncGenerator[str]:
     """
     A generator that yields player data in a format suitable for SSE.
     This function serializes the player data and sends it as a server-sent event.
@@ -22,12 +22,11 @@ async def players_generator(player_manager: PlayerManager) -> AsyncGenerator[str
         str: The serialized player data in JSON format.
     """
     while True:
-        serialized_players = {
-            player_id: player.model_dump() for player_id, player in player_manager.get_players_dict().items()
-        }
-        data = json.dumps({"path": "/", "data": serialized_players})
-        yield f"event: put\ndata: {data}\n\n"
-        await sleep(0.02)
+        event = players_to_event(player_manager.get_players())
+        yield event.serialize()
+
+        # Sleep for a short duration to control the frequency of updates
+        await sleep(1 / player_loop_fps)
 
 
 @router.get(
