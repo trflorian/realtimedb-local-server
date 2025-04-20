@@ -49,7 +49,6 @@ async def get_players(
 
 @router.put(
     path="/players/{player_id}.json",
-    response_model=Player,
     responses={
         200: {"description": "Player updated successfully"},
         400: {"description": "Invalid player ID"},
