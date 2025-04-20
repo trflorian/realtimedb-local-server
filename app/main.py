@@ -41,8 +41,9 @@ async def root() -> StreamingResponse:
     """
     A simple GET endpoint that returns a JSON response with the player data.
     This endpoint is used to retrieve the current state of players.
+
     Returns:
-        Response: A JSON response containing the player data.
+        StreamingResponse: A streaming response that sends player data as server-sent events.
     """
     return StreamingResponse(players_generator(), media_type="text/event-stream")
 
